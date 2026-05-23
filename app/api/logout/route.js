@@ -5,7 +5,9 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 export async function POST(request) {
-  const response = NextResponse.redirect(new URL(LOGIN_PATH, request.url));
+  const response = NextResponse.redirect(new URL(LOGIN_PATH, request.url), {
+    status: 303,
+  });
   response.cookies.set({
     name: DEMO_AUTH_COOKIE,
     value: "",

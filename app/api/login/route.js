@@ -13,7 +13,7 @@ export async function POST(request) {
   const password = process.env.DEMO_ACCESS_PASSWORD;
   if (!password) {
     const url = new URL(`${LOGIN_PATH}?error=missing_password`, request.url);
-    return NextResponse.redirect(url);
+    return NextResponse.redirect(url, { status: 303 });
   }
 
   const formData = await request.formData();
@@ -24,11 +24,13 @@ export async function POST(request) {
     const url = new URL(LOGIN_PATH, request.url);
     url.searchParams.set("error", "invalid_password");
     url.searchParams.set("from", returnTo);
-    return NextResponse.redirect(url);
+    return NextResponse.redirect(url, { status: 303 });
   }
 
   const token = await createDemoAccessToken(password);
-  const response = NextResponse.redirect(new URL(returnTo, request.url));
+  const response = NextResponse.redirect(new URL(returnTo, request.url), {
+    status: 303,
+  });
   response.cookies.set({
     name: DEMO_AUTH_COOKIE,
     value: token,
